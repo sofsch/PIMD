@@ -8,12 +8,12 @@ INTEGER			:: i,j
 X(:)=1.e-12
 U(:)=X(:)
 P(:)=0.
-Mp(1)=1.e-27
+Mp(1)=1.6737236e-27
 T=300.
-dt=10.*4.8e-17
+dt=20.*4.8e-17
 beta=1./(Kb*T)
 wp=sqrt(1.*nbeads)/(beta*hbar)
-gamma_lang(:)=1.e12
+gamma_lang(:)=wp
 write(*,*) wp
 write(*,*) beta
 do i=2,nbeads
@@ -22,6 +22,7 @@ enddo
 
 
 OPEN(15,FILE="Beads.pos")
+OPEN(16,FILE="16Beads.pos")
 
 do i=1,nstep
 	CALL B(dt/2)
@@ -37,5 +38,6 @@ do i=1,nstep
 	enddo
 enddo
  CLOSE(15)
+ CLOSE(16)
 
 END PROGRAM Principal

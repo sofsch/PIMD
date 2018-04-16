@@ -25,7 +25,7 @@ REAL(8), DIMENSION(nbeads), INTENT(out)	:: X
 REAL(8), DIMENSION(nbeads), INTENT(in)	:: U
 INTEGER					:: i,j
 
-X=0
+X(:)=0
 X(1)=U(1)
 
 do i=2,nbeads
