@@ -3,6 +3,7 @@ MODULE Langevin
 CONTAINS
 
 SUBROUTINE B(deltaT)
+USE Staging
 USE Force
 USE Global, ONLY : nbeads,U,P
 IMPLICIT NONE
@@ -33,7 +34,6 @@ SUBROUTINE A(deltaT)
 USE Global, ONLY : nbeads,U,P,Mp,wp
 IMPLICIT NONE
 REAL(8), DIMENSION(nbeads)			:: Utmp, Ptmp
-REAL(8), DIMENSION(nbeads)			:: Mp
 REAL(8), INTENT(in)				:: deltaT
 INTEGER						:: i
 
@@ -41,7 +41,7 @@ INTEGER						:: i
 Utmp=0
 Ptmp=0
 
-Utmp(1)=U(1) + ( ( P(1)/Mp(1) )*deltaT
+Utmp(1)=U(1) + ( ( P(1)/Mp(1) )*deltaT )
 Ptmp(1)=P(1)
 
 do i=2,nbeads
@@ -58,15 +58,15 @@ END SUBROUTINE A
 SUBROUTINE O(deltaT)
 USE Global, ONLY : nbeads,P,gamma_lang,beta,Mp
 IMPLICIT NONE
-REAL(8), DIMENSION(nbeads)			:: Mp,R
+REAL(8), DIMENSION(nbeads)			:: R
 REAL(8), INTENT(in)				:: deltaT
 INTEGER						:: i
 
-do i=1,n_beads
+do i=1,nbeads
 	R(i)=GAUSS()
 enddo
 
-R=R-(sum(R)/(n_beads))
+R=R-(sum(R)/(nbeads))
 
 do i=1,nbeads
 	P(i)=exp(-gamma_lang(i)*deltaT)*P(i) + sqrt( 1.- exp(-2*gamma_lang(i)*deltaT) )*sqrt(Mp(i))*R(i)
