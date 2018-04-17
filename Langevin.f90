@@ -4,7 +4,6 @@ CONTAINS
 
 SUBROUTINE B(deltaT)
 USE Staging
-USE Force
 USE Global, ONLY : nbeads,U,P
 IMPLICIT NONE
 REAL(8), DIMENSION(nbeads)			:: X,F,F_staging

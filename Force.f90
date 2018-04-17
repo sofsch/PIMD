@@ -1,7 +1,3 @@
-MODULE Force
-IMPLICIT NONE
-CONTAINS
-
 SUBROUTINE FORCES(X,F)
 USE Global, ONLY : nbeads,wp,Mp
 IMPLICIT NONE
@@ -15,6 +11,3 @@ do i=1,nbeads
 	F(i)=-Mp(i)*(wp**2)*X(i)
 enddo
 END SUBROUTINE FORCES
-
-END MODULE Force
-

@@ -2,27 +2,12 @@ PROGRAM Principal
 USE Langevin
 USE Global
 USE Staging
+USE Init_close
 IMPLICIT NONE
 INTEGER			:: i,j
 
-X(:)=1.e-12
-U(:)=X(:)
-P(:)=0.
-Mp(1)=1.6737236e-27
-T=300.
-dt=20.*4.8e-17
-beta=1./(Kb*T)
-wp=sqrt(1.*nbeads)/(beta*hbar)
-gamma_lang(:)=wp
-write(*,*) wp
-write(*,*) beta
-do i=2,nbeads
-	Mp(i)=(i/(i-1))*1.e-27
-enddo
-
-
-OPEN(15,FILE="Beads.pos")
-OPEN(16,FILE="16Beads.pos")
+CALL Read_namelist()
+Call INITIALIZE
 
 do i=1,nstep
 	CALL B(dt/2)
@@ -37,7 +22,7 @@ do i=1,nstep
 		write(16,*) X(j)
 	enddo
 enddo
- CLOSE(15)
- CLOSE(16)
+ 
+CALL FINALIZE()
 
 END PROGRAM Principal
