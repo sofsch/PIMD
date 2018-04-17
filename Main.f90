@@ -20,6 +20,7 @@ do i=1,nstep
 	WRITE(15,*) i*dt, X(:), P(:)
 	do j=1,nbeads
 		write(16,*) X(j)
+		write(17,*) sum(X(:))/nbeads
 	enddo
 enddo
  
