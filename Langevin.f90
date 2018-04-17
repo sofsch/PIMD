@@ -50,7 +50,6 @@ enddo
 
 U=Utmp
 P=Ptmp
-
 END SUBROUTINE A
 
 

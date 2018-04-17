@@ -17,7 +17,7 @@ do i=1,nstep
 	CALL B(dt/2)
 	
 	CALL ITRANSFORM(X,U)
-	WRITE(15,*) i*dt, X(:)
+	WRITE(15,*) i*dt, X(:), P(:)
 	do j=1,nbeads
 		write(16,*) X(j)
 	enddo
