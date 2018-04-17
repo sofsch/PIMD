@@ -1,6 +1,6 @@
 OBJECTS = Global.o Init.o Read_namelist.o Staging.o Force.o Langevin.o Main.o 
 F90COMP = gfortran
-OPT = -fbounds-check 
+OPT = -fbounds-check
 
 PI.x: $(OBJECTS)
 	$(F90COMP) $(OPT) $(OBJECTS) -o PI.x

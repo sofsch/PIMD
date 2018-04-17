@@ -68,7 +68,7 @@ enddo
 R=R-(sum(R)/(nbeads))
 
 do i=1,nbeads
-	P(i)=exp(-gamma_lang(i)*deltaT)*P(i) + sqrt( 1.- exp(-2*gamma_lang(i)*deltaT) )*sqrt(Mp(i))*R(i)
+	P(i)=exp(-gamma_lang(i)*deltaT)*P(i) + sqrt( 1.- exp(-2*gamma_lang(i)*deltaT) )*sqrt(Mp(i)/beta)*R(i)
 enddo
 
 END SUBROUTINE O

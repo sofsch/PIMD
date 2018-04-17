@@ -3,7 +3,6 @@ USE Global, ONLY : nbeads,wp,Mp
 IMPLICIT NONE
 REAL(8), DIMENSION(nbeads), INTENT(in)	:: X
 REAL(8), DIMENSION(nbeads), INTENT(out)	:: F
-REAL(8)					:: k
 INTEGER					:: i
 
 
