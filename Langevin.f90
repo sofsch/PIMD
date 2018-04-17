@@ -13,14 +13,14 @@ INTEGER						:: i
 CALL ITRANSFORM(X,U)
 CALL FORCES(X,F)
 
-F_staging=0
+F_staging(:)=0.
 
 do i=1,nbeads
-	F_staging(1)=F_staging(1)+F(i)
+	F_staging(1)=F_staging(1)+(F(i)/nbeads)
 enddo
 
 do i=2,nbeads
-	F_staging(i)=F(i) + ( ( (i-2)/(i-1) )*F_staging(i-1) )
+	F_staging(i)=(F(i)/nbeads) + ( ( (i-2)/(i-1) )*F_staging(i-1) )
 enddo
 
 do i=1,nbeads

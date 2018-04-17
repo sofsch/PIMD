@@ -30,7 +30,7 @@ gamma_lang(:)=wp!init_gamma_lang
 OPEN(15,FILE="Beads.pos")
 OPEN(16,FILE="16Beads.pos")
 
-write(15,*) 0, X(:), P(:)
+!write(15,*) 0, X(:), P(:)
 
 
 END SUBROUTINE INITIALIZE

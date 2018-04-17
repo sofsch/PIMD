@@ -9,7 +9,7 @@ REAL(8), DIMENSION(nbeads), INTENT(in)	:: X
 REAL(8), DIMENSION(nbeads), INTENT(out)	:: U
 INTEGER					:: i
 
-U=0
+U(:)=0.
 U(1)=X(1)
 
 do i=2,nbeads
