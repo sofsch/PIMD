@@ -1,5 +1,5 @@
 SUBROUTINE FORCES(X,F)
-USE Global, ONLY : nbeads,Ma,wp
+USE Global, ONLY : nbeads,Ma
 IMPLICIT NONE
 REAL(8), DIMENSION(nbeads), INTENT(in)	:: X
 REAL(8), DIMENSION(nbeads), INTENT(out)	:: F
