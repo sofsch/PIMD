@@ -4,6 +4,7 @@ CONTAINS
 
 SUBROUTINE INITIALIZE()
 USE Global
+USE Staging
 IMPLICIT NONE
 INTEGER			:: i
 
@@ -14,23 +15,27 @@ ALLOCATE(Mp(nbeads),Ma(nbeads))
 ALLOCATE(gamma_lang(nbeads))
 
 X(:)=init_pos
-U(:)=X(:)
-P(:)=0.
+CALL TRANSFORM()
+P(:)=0._8
 Mp(1)=Mass_ref
-Ma(1)=0.
+Ma(1)=0._8
+output=trim(output)
 do i=2,nbeads
-	Mp(i)=(i/(i-1))*Mp(1)
+	Mp(i)=(i/(i-1._8))*Mp(1)
 	Ma(i)=Mp(i)
 enddo
 
-beta=1./(Kb*Temperature)
-wp=sqrt(1.*nbeads)/(beta*hbar)
-gamma_lang(:)=wp!init_gamma_lang
+beta=1._8/(Kb*Temperature)
+wp=sqrt(1._8*nbeads)/(beta*hbar)
+if (init_gamma_lang .ne. 0) then
+	gamma_lang(:)=init_gamma_lang
+else
+	gamma_lang(:)=wp
+endif
 
-OPEN(15,FILE="Beads.pos")
-OPEN(16,FILE="16Beads.pos")
+OPEN(15,FILE=TRIM(output)//".dist")
+!OPEN(16,FILE=TRIM(output)//".pos")
 
-!write(15,*) 0, X(:), P(:)
 
 
 END SUBROUTINE INITIALIZE
@@ -46,7 +51,7 @@ DEALLOCATE(Mp,Ma)
 DEALLOCATE(gamma_lang)
 
 CLOSE(15)
-CLOSE(16)
+!CLOSE(16)
 
 END SUBROUTINE FINALIZE
 

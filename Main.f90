@@ -1,16 +1,16 @@
 PROGRAM Principal
 USE Langevin
-USE Global
+USE Global, ONLY : X,dt,nstep,nbeads
 USE Staging
 USE Init_close
 IMPLICIT NONE
-INTEGER			:: i,j,nproba
+INTEGER			:: i,j,k,nproba
 REAL(8), DIMENSION(:,:), ALLOCATABLE :: proba
 REAL(8)					:: xmin,xmax,dx,norm
 
-xmin=0.
-xmax=3.e-9
-dx=1e-12
+xmin=-3.e-10_8
+xmax=3.e-10_8
+dx=1.e-12_8
 nproba=nint((xmax-xmin)/dx)+1
 
 
@@ -20,36 +20,37 @@ Call INITIALIZE
 
 
 ALLOCATE(proba(0:nproba,2))
-
 proba(:,:)=0
-
 do i=1,nstep
-	CALL B(dt/2)
-	CALL A(dt/2)
-	CALL O(dt)
-	CALL A(dt/2)
-	CALL B(dt/2)
+	CALL B(dt/2._8)
+	CALL A(dt)
+	!CALL O(dt)
+	!CALL A(dt/2._8)
+	CALL B(dt/2._8)
 	
-	CALL ITRANSFORM(X,U)
-	!WRITE(15,*) i*dt, X(:), P(:)
+	CALL ITRANSFORM()
 	do j=1,nbeads
 		!write(16,*) X(j)
-		!write(17,*) sum(X(:))/nbeads
-		
-		proba(nint(abs(X(j)/dx)),2)=proba(nint(abs(X(j)/dx)),2)+1.
+		do k=0,nproba
+			if (X(j) .GT. (xmin + k*dx) .AND. X(j) .LT. (xmin + (k+1)*dx) ) then
+				proba(k,2)=proba(k,2)+(1._8)
+			endif
+		enddo
 	enddo
-	write(*,*) i*dt
+	if (MODULO((100.*(1.*i/nstep)),1.)==0.) then
+		write(*,*) "test",100.*i/nstep
+	endif
 enddo
-
-norm=0
+proba(:,:)=proba(:,:)/(nbeads)
+norm=0._8
 do i=0,nproba
 	norm=norm + (proba(i,2)*dx)
 enddo
 
-proba(:,2)=proba(:,2)/norm
+proba(:,2)=(proba(:,2)*1.e-10_8)/norm
 do i=0,nproba
-	proba(i,1)= xmin + i*dx
-	write(18,*) proba(i,:)
+	proba(i,1)= (xmin + i*dx)*1.e10_8
+	write(15,*) proba(i,:)
 enddo
  
 CALL FINALIZE()

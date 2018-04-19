@@ -2,35 +2,32 @@ MODULE Staging
 
 CONTAINS
 
-SUBROUTINE TRANSFORM(X,U)
-USE Global, ONLY : nbeads
+SUBROUTINE TRANSFORM()
+USE Global, ONLY : nbeads,X,U
 IMPLICIT NONE
-REAL(8), DIMENSION(nbeads), INTENT(in)	:: X
-REAL(8), DIMENSION(nbeads), INTENT(out)	:: U
 INTEGER					:: i
 
-U(:)=0.
+U(:)=0._8
 U(1)=X(1)
 
-do i=2,nbeads
-	U(i)=X(i) - ( ( (i-1)*X(i+1) + X(1) )/( i ) )
+do i=2,nbeads-1
+	U(i)=X(i) - ( ( (i-1._8)*X(i+1) + X(1) )/( DBLE(i) ) )
 enddo
+U(nbeads)=X(nbeads) - ( ( (nbeads-1._8)*X(1) + X(1) )/( DBLE(nbeads) ) ) 
 END SUBROUTINE TRANSFORM
 
 
-SUBROUTINE ITRANSFORM(X,U)
-USE Global, ONLY : nbeads
+SUBROUTINE ITRANSFORM()
+USE Global, ONLY : nbeads,U,X
 IMPLICIT NONE
-REAL(8), DIMENSION(nbeads), INTENT(out)	:: X
-REAL(8), DIMENSION(nbeads), INTENT(in)	:: U
 INTEGER					:: i,j
 
-X(:)=0
+X(:)=0._8
 X(1)=U(1)
 
 do i=2,nbeads
 	do j=i,nbeads
-		X(i)=X(i) + ( ( (i-1)/(j-1) )*U(j) )
+		X(i)=X(i) + ( ( (i-1._8)/(j-1._8) )*U(j) )
 	enddo
 	X(i)=X(i) + U(1)
 enddo

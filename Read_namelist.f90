@@ -9,7 +9,7 @@ END TYPE list_ions
 
 TYPE (list_ions) ions_name_pos
 
-NAMELIST /simulation/ nbeads, nstep, dt
+NAMELIST /simulation/ nbeads, nstep, dt, output
 NAMELIST /dynamics/ Temperature, init_gamma_lang
 NAMELIST /ions/ Mass_ref,ions_name_pos
 
