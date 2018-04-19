@@ -34,7 +34,7 @@ else
 endif
 
 OPEN(15,FILE=TRIM(output)//".dist")
-!OPEN(16,FILE=TRIM(output)//".pos")
+OPEN(16,FILE=TRIM(output)//".pos")
 
 
 
@@ -51,7 +51,7 @@ DEALLOCATE(Mp,Ma)
 DEALLOCATE(gamma_lang)
 
 CLOSE(15)
-!CLOSE(16)
+CLOSE(16)
 
 END SUBROUTINE FINALIZE
 

@@ -1,6 +1,7 @@
 OBJECTS = Global.o Read_namelist.o Staging.o Init.o Force.o Langevin.o Main.o 
 F90COMP = gfortran
 OPT = -O3
+#OPT = -fopenmp -O3
 #OPT = -fbounds-check -Wall -Wno-tabs
 
 PI.x: $(OBJECTS)
