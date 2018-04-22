@@ -2,34 +2,34 @@
 ! Module Distributions						      !
 !---------------------------------------------------------------------!
 MODULE Distributions
-
+USE Constants, ONLY : DP
 CONTAINS
 
-SUBROUTINE DISTRIBUTIONS1D(array,proba,dp,xmin,xmax)
+SUBROUTINE DISTRIBUTIONS1D(array,proba,dp1,xmin,xmax)
 
 	IMPLICIT NONE
 	
-	REAL(8), DIMENSION(:,:), INTENT(in) 			:: array
-	REAL(8), INTENT(in) 					:: xmin, xmax
-	REAL(8), DIMENSION(:,:), ALLOCATABLE, INTENT(out) 	:: proba
-	REAL(8) 						:: dp,norm
+	REAL(DP), DIMENSION(:,:), INTENT(in) 			:: array
+	REAL(DP), INTENT(in) 					:: xmin, xmax
+	REAL(DP), DIMENSION(:,:), ALLOCATABLE, INTENT(out) 	:: proba
+	REAL(DP) 						:: dp1,norm
 	INTEGER 						:: nb_step,i,j
 	
-	nb_step=nint((xmax-xmin)/dp)
+	nb_step=nint((xmax-xmin)/dp1)
 	ALLOCATE(proba(nb_step+1,2))
-	proba(:,:)=0.
-	norm=0.
+	proba(:,:)=0._DP
+	norm=0._DP
 		
 	
 	DO i=1,nb_step+1
 		DO j=1,size(array,1)
-			IF ( array(j,1) <= (xmin + (i-1)*dp + dp)  .AND. array(j,1) > (xmin + (i-1)*dp) ) THEN
+			IF ( array(j,1) <= (xmin + (i-1)*dp1 + dp1)  .AND. array(j,1) > (xmin + (i-1)*dp1) ) THEN
 				proba(i,2)=proba(i,2)+(1./array(j,1))
 			ENDIF
 		ENDDO
-		proba(i,1)=xmin + (i-1)*dp
+		proba(i,1)=xmin + (i-1)*dp1
 	ENDDO
-	norm=sum(proba(:,2)*dp)
+	norm=sum(proba(:,2)*dp1)
 	proba(:,2)=proba(:,2)/norm
 	
 END SUBROUTINE DISTRIBUTIONS1D
@@ -39,18 +39,18 @@ SUBROUTINE distribution2d(array1,array2,proba,dp1,dp2,min_1,max_1,min_2,max_2,gn
 
 	IMPLICIT NONE
 	
-	REAL(8), DIMENSION(:), INTENT(in) 			:: array1,array2
-	REAL(8), INTENT(in) 					:: min_1,min_2,max_1,max_2
-	REAL(8) 						:: xmin1, xmax1, xmin2, xmax2
-	REAL(8), INTENT(in)	 				:: dp1,dp2
+	REAL(DP), DIMENSION(:), INTENT(in) 			:: array1,array2
+	REAL(DP), INTENT(in) 					:: min_1,min_2,max_1,max_2
+	REAL(DP) 						:: xmin1, xmax1, xmin2, xmax2
+	REAL(DP), INTENT(in)	 				:: dp1,dp2
 	LOGICAL, INTENT(in) 					:: gnu
-	REAL(8), DIMENSION(:,:), ALLOCATABLE, INTENT(out) 	:: proba
-	REAL(8), DIMENSION(:,:), ALLOCATABLE 			:: proba_prov
-	REAL(8) 						:: norme
+	REAL(DP), DIMENSION(:,:), ALLOCATABLE, INTENT(out) 	:: proba
+	REAL(DP), DIMENSION(:,:), ALLOCATABLE 			:: proba_prov
+	REAL(DP) 						:: norme
 	INTEGER 						:: nb_step1,nb_step2,i,j,x,y,k
 	INTEGER 						:: start1,stop1,start2,stop2
 	
-	norme=0
+	norme=0._DP
 	IF(min_1 == 0. .AND. min_2 == 0. .AND. max_1 == 0. .AND. max_2 == 0.) THEN
 		xmin1=minval(array1(:))
 		xmax1=maxval(array1(:))

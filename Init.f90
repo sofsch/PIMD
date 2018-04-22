@@ -5,31 +5,33 @@
 !			INPUT FILE : PI.in			      !
 !---------------------------------------------------------------------!
 MODULE Init_close
-
+USE Constants, ONLY : DP
 CONTAINS
 
 SUBROUTINE INITIALIZE()
-
+USE constants, ONLY : AMU_AU, BOHR_RADIUS_SI, K_BOLTZMANN_AU, T_AU, AU_SEC
 USE Global
 USE Staging
 
 IMPLICIT NONE
-INTEGER					:: i,j
+INTEGER							:: i,j
+REAL(DP)						:: init_gamma_lang
 NAMELIST /simulation/nat,ntyp,nbeads,nstep,dt,output
 NAMELIST /dynamics/Temperature, init_gamma_lang
 NAMELIST /species/species_label_mass
 NAMELIST /ions/ions_name_pos
 TYPE list_species
-	CHARACTER(3)			:: Atom_label
-	REAL(8)				:: Mass_ref
-END TYPE list_species
+	CHARACTER(3)					:: Atom_label
+	REAL(DP)					:: Mass_ref
+END TYPE list_species	
 TYPE list_ions
-	CHARACTER(3)			:: Atom_name
-	REAL(8), DIMENSION(3)		:: Atom_position
-	INTEGER, DIMENSION(3)		:: Force_c
+	CHARACTER(3)					:: Atom_name
+	REAL(DP), DIMENSION(3)				:: Atom_position
+	INTEGER, DIMENSION(3)				:: Force_c
 END TYPE list_ions
-TYPE (list_species), DIMENSION(:), ALLOCATABLE :: species_label_mass
-TYPE (list_ions), DIMENSION(:), ALLOCATABLE :: ions_name_pos
+TYPE (list_species), 	DIMENSION(:), ALLOCATABLE	:: species_label_mass
+TYPE (list_ions), 	DIMENSION(:), ALLOCATABLE 	:: ions_name_pos
+
 
 OPEN(10,FILE="PI.in")
 READ(10,NML=simulation)
@@ -39,7 +41,7 @@ READ(10,NML=dynamics)
 READ(10,NML=species)
 READ(10,NML=ions)
 CLOSE(10)
-
+dt=dt*2._DP
 
 ALLOCATE(U(nat,nbeads,3))
 ALLOCATE(P(nat,nbeads,3))
@@ -50,49 +52,50 @@ ALLOCATE(gamma_lang(nbeads))
 ALLOCATE(force_constraint(nat,3))
 
 
-do i=1,nat
-	do j=1,ntyp
-		if ( ions_name_pos(i)%Atom_name == species_label_mass(j)%Atom_label ) then
-			Mass(i)=species_label_mass(j)%Mass_ref
-		endif
-	enddo
-enddo
+DO i=1,nat
+	DO j=1,ntyp
+		IF ( ions_name_pos(i)%Atom_name == species_label_mass(j)%Atom_label ) then
+			Mass(i)=species_label_mass(j)%Mass_ref*AMU_AU
+		ENDIF
+	ENDDO
+ENDDO
 
-do i=1,nat
-	do j=1,nbeads
-		tau(i,j,:) = ions_name_pos(i)%Atom_position(:)
-	enddo
-enddo
+DO i=1,nat
+	DO j=1,nbeads
+		tau(i,j,:) = ions_name_pos(i)%Atom_position(:)/(BOHR_RADIUS_SI*1E+10_DP)
+	ENDDO
+ENDDO
 
-do i=1,nat
+DO i=1,nat
 	force_constraint(i,:)= ions_name_pos(i)%Force_c(:)
-enddo
+ENDDO
 
 
 CALL TRANSFORM()
 
-P(:,:,:)=0._8
+P(:,:,:)=0._DP
 
 Mp(:,1)=Mass(:)
-Ma(:,1)=0._8
+Ma(:,1)=0._DP
 output=trim(output)
-do i=1,nat
-	do j=2,nbeads
-		Mp(i,j)=(j/(j-1._8))*Mass(i)
+DO i=1,nat
+	DO j=2,nbeads
+		Mp(i,j)=(j/(j-1._DP))*Mass(i)
 		Ma(i,j)=Mp(i,j)
-	enddo
-enddo
-
-beta=1._8/(Kb*Temperature)
-wp=sqrt(1._8*nbeads)/(beta*hbar)
-if (init_gamma_lang .ne. 0) then
-	gamma_lang(:)=init_gamma_lang
-else
+	ENDDO
+ENDDO
+!Temperature=Temperature*T_AU
+Beta=1._DP/(K_BOLTZMANN_AU*Temperature)
+wp=sqrt(1._DP*nbeads)/(Beta)!*hbar)
+IF (init_gamma_lang .ne. 0) then
+	gamma_lang(:)=init_gamma_lang*AU_SEC
+ELSE
 	gamma_lang(:)=wp
-endif
+ENDIF
 
 OPEN(15,FILE=TRIM(output)//".dist")
 OPEN(16,FILE=TRIM(output)//".pos")
+OPEN(17,FILE=TRIM(output)//".E")
 
 
 
@@ -110,6 +113,7 @@ DEALLOCATE(gamma_lang)
 DEALLOCATE(force_constraint)
 CLOSE(15)
 CLOSE(16)
+CLOSE(17)
 
 END SUBROUTINE FINALIZE
 

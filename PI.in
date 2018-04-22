@@ -2,17 +2,17 @@
 nat = 1,
 ntyp = 1,
 nbeads = 8,
-nstep = 1000000,
-dt = 4.84e-16,
-output="8beads"
+nstep = 100000,
+dt = 10.,
+output="1beads"
 /
 &dynamics
 Temperature = 300.,
 init_gamma_lang = 0,
 /
 &species
-species_label_mass="H" 1.6737236e-27,
+species_label_mass="H" 1.,
 /
 &ions
-ions_name_pos="H" 0.5e-10 0.5e-10 0. 1 1 0,
+ions_name_pos="H" 0.5 0.5 0. 1 1 0,
 /

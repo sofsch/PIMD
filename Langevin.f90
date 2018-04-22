@@ -2,7 +2,7 @@
 ! Module Langevin : Langevin dynamics (BAOAB integrator)	      !
 !---------------------------------------------------------------------!
 MODULE Langevin
-
+USE Constants, ONLY : DP
 CONTAINS
 
 SUBROUTINE B(deltaT)
@@ -12,14 +12,14 @@ USE Global, ONLY : nbeads,nat,P
 
 IMPLICIT NONE
 
-REAL(8), DIMENSION(nat,nbeads,3)		:: F,F_staging
-REAL(8), INTENT(in)				:: deltaT
+REAL(DP),	DIMENSION(nat,nbeads,3)		:: F,F_staging
+REAL(DP),	INTENT(in)			:: deltaT
 INTEGER						:: i,j,k
 
 CALL ITRANSFORM()
 CALL FORCES(F)
 
-F_staging(:,:,:)=0._8
+F_staging(:,:,:)=0._DP
 
 DO i=1,nat
 	DO j=1,nbeads
@@ -32,7 +32,7 @@ ENDDO
 DO i=1,nat
 	DO j=2,nbeads
 		DO k=1,3
-			F_staging(i,j,k)= (F(i,j,k)/DBLE(nbeads)) + ((( (j-2._8)/(j-1._8) )*F_staging(i,j-1,k)))
+			F_staging(i,j,k)= (F(i,j,k)/DBLE(nbeads)) + ((( (j-2._DP)/(j-1._DP) )*F_staging(i,j-1,k)))
 		ENDDO
 	ENDDO
 ENDDO
@@ -54,13 +54,13 @@ USE Global, ONLY : nbeads,nat,U,P,Mp,wp,Mass
 
 IMPLICIT NONE
 
-REAL(8), DIMENSION(nat,nbeads,3)		:: Utmp, Ptmp
-REAL(8), INTENT(in)				:: deltaT
+REAL(DP),	DIMENSION(nat,nbeads,3)		:: Utmp, Ptmp
+REAL(DP),	INTENT(in)			:: deltaT
 INTEGER						:: i,j,k
 
 
-Utmp(:,:,:)=0._8
-Ptmp(:,:,:)=0._8
+Utmp(:,:,:)=0._DP
+Ptmp(:,:,:)=0._DP
 
 DO i=1,nat
 	DO j=1,3
@@ -85,12 +85,12 @@ END SUBROUTINE A
 
 SUBROUTINE O(deltaT)
 
-USE Global, ONLY : nbeads,nat,P,gamma_lang,beta,Mp,force_constraint
+USE Global, ONLY : nbeads,nat,P,gamma_lang,Beta,Mp,force_constraint
 
 IMPLICIT NONE
 
-REAL(8), DIMENSION(nat,nbeads,3)		:: R
-REAL(8), INTENT(in)				:: deltaT
+REAL(DP),	DIMENSION(nat,nbeads,3)		:: R
+REAL(DP),	INTENT(in)			:: deltaT
 INTEGER						:: i,j,k
 
 DO i=1,nat
@@ -104,21 +104,21 @@ ENDDO
 DO i=1,nat
 	DO j=1,nbeads
 		DO k=1,3
-			P(i,j,k)=exp(-gamma_lang(j)*deltaT)*P(i,j,k) + sqrt( 1._8- exp(-2._8*gamma_lang(j)*deltaT) )*sqrt(Mp(i,j)/beta)*R(i,j,k)
+			P(i,j,k)=exp(-gamma_lang(j)*deltaT)*P(i,j,k) + sqrt( 1._DP- exp(-2._DP*gamma_lang(j)*deltaT) )*sqrt(Mp(i,j)/Beta)*R(i,j,k)
 		ENDDO
 	ENDDO
 ENDDO
 END SUBROUTINE O
 
-REAL(8) FUNCTION GAUSS()
+REAL(DP) FUNCTION GAUSS()
 
 IMPLICIT NONE
 
-REAL(8), PARAMETER	 :: a1 = 3.949846138_8, a3 = 0.252408784_8, a5 = 0.076542912_8, a7 = 0.008355968_8, a9 = 0.029899776_8
-REAL(8)			 :: r, r2
-REAL(8), DIMENSION(12) 	 :: s
+REAL(DP),	PARAMETER	:: a1 = 3.949846138_DP, a3 = 0.252408784_DP, a5 = 0.076542912_DP, a7 = 0.008355968_DP, a9 = 0.029899776_DP
+REAL(DP)			:: r, r2
+REAL(DP),	DIMENSION(12)	:: s
 
-CALL RANDOM_NUMBER(s) ; r = (sum(s)-6.0_8)/4.0_8 ; r2 = r*r
+CALL RANDOM_NUMBER(s) ; r = (sum(s)-6.0_DP)/4.0_DP ; r2 = r*r
 GAUSS =  (((( a9 * r2 + a7 ) * r2 + a5 ) * r2 + a3 ) * r2 + a1 )*r
 END FUNCTION GAUSS
 
