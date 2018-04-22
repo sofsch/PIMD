@@ -2,7 +2,7 @@
 ! Return the inter-atomic force component F                           !
 !---------------------------------------------------------------------!
 SUBROUTINE FORCES(F)
-USE Constants, ONLY : DP,K_BOLTZMANN_AU, BOHR_RADIUS_SI, AU_SEC
+USE Constants, ONLY : DP,K_BOLTZMANN_AU, BOHR_RADIUS_SI, AU_SEC, hbar
 USE Global, ONLY 	: nbeads,nat,tau,force_constraint,Ma
 
 IMPLICIT NONE

@@ -3,71 +3,25 @@
 !---------------------------------------------------------------------!
 PROGRAM Principal
 USE Constants, ONLY : DP
-USE Langevin
-USE Global!, ONLY : tau,dt,nstep,nbeads
-USE Staging
+USE Global, ONLY : pos_tot, ions_dynamics
 USE Init_close
 USE Distributions
-USE Estimator
+USE Dynamics
 
 IMPLICIT NONE
 
 INTEGER							:: i,j,k,l
 REAL(DP),	DIMENSION(:,:),		ALLOCATABLE 	:: proba
-REAL(DP),	DIMENSION(:,:,:),	ALLOCATABLE	:: pos_tot
 
 
 CALL INITIALIZE()
-ALLOCATE(pos_tot(nstep*nbeads,nat,2))
 
-
-WRITE(*,*) nat
-WRITE(*,*) ntyp
-WRITE(*,*) nbeads
-WRITE(*,*) nstep
-WRITE(*,*) dt
-WRITE(*,*) output
-WRITE(*,*) Temperature
-DO i=1,nat
-	WRITE(*,*) gamma_lang(i)
-ENDDO
-DO i=1,nat
-	WRITE(*,*) Mass(i)
-ENDDO
-DO i=1,nbeads
-	WRITE(*,*) tau(:,i,:)
-ENDDO
-
-
-
-
-l=0
-DO i=1,nstep
-	CALL B(dt/2._DP)
-	CALL A(dt/2._DP)
-	CALL O(dt)
-	CALL A(dt/2._DP)
-	CALL B(dt/2._DP)
-	
-	CALL ITRANSFORM()
-	write(16,*) i*dt,tau(1,:,1)
-	
-	DO j=1,nat
-		DO k=1,nbeads
-			l=l+1
-			pos_tot(l,j,1)=tau(j,k,1)
-			pos_tot(l,j,2)=tau(j,k,2)
-		ENDDO
-	ENDDO
-
-	IF (MODULO((100.*(1.*i/nstep)),1.)==0.) then
-		write(*,*) "test",100.*i/nstep
-	ENDIF
-	CALL KineticV()
-	WRITE(17,*) i*dt, KineticEnergy
-ENDDO
-
-
+SELECT CASE(ions_dynamics)
+	CASE("BAOAB")
+		CALL BAOAB()
+	CASE("Verlet")
+		CALL VERLET()
+END SELECT
 
 CALL distribution2d(pos_tot(:,1,1),pos_tot(:,1,2),proba,0.05_DP,0.05_DP,-5._DP,5._DP,-5._DP,5._DP,.TRUE.)
 
@@ -81,7 +35,6 @@ ENDDO
 
  
 CALL FINALIZE()
-DEALLOCATE(pos_tot)
 DEALLOCATE(proba)
 
 END PROGRAM Principal

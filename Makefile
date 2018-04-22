@@ -1,4 +1,4 @@
-OBJECTS = Constants.o Global.o Staging.o Init.o Force.o Langevin.o Estimator.o Distributions.o Main.o 
+OBJECTS = Constants.o Global.o Staging.o Init.o Force.o Langevin.o Estimator.o Dynamics.o Distributions.o Main.o 
 #F90COMP = mpif90
 F90COMP = gfortran
 OPT = -O3
@@ -29,6 +29,10 @@ distributions.mod: Distributions.o Distributions.f90
 	$(F90COMP) -c $(OPT) Distributions.f90
 Distributions.o: Distributions.f90
 	$(F90COMP) -c $(OPT) Distributions.f90
+dynamics.mod: Dynamics.o Dynamics.f90
+	$(F90COMP) -c $(OPT) Dynamics.f90
+Dynamics.o: Distributions.f90
+	$(F90COMP) -c $(OPT) Dynamics.f90	
 constants.mod: Constants.o Constants.f90
 	$(F90COMP) -c $(OPT) Constants.f90
 Constants.o: Constants.f90

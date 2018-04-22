@@ -17,7 +17,7 @@ IMPLICIT NONE
 INTEGER							:: i,j
 REAL(DP)						:: init_gamma_lang
 NAMELIST /simulation/nat,ntyp,nbeads,nstep,dt,output
-NAMELIST /dynamics/Temperature, init_gamma_lang
+NAMELIST /dynamics/ions_dynamics, Temperature, init_gamma_lang
 NAMELIST /species/species_label_mass
 NAMELIST /ions/ions_name_pos
 TYPE list_species
@@ -50,6 +50,7 @@ ALLOCATE(Mass(nat))
 ALLOCATE(Mp(nat,nbeads),Ma(nat,nbeads))
 ALLOCATE(gamma_lang(nbeads))
 ALLOCATE(force_constraint(nat,3))
+ALLOCATE(pos_tot(nstep*nbeads,nat,2))
 
 
 DO i=1,nat
@@ -84,7 +85,7 @@ DO i=1,nat
 		Ma(i,j)=Mp(i,j)
 	ENDDO
 ENDDO
-!Temperature=Temperature*T_AU
+
 Beta=1._DP/(K_BOLTZMANN_AU*Temperature)
 wp=sqrt(1._DP*nbeads)/(Beta)!*hbar)
 IF (init_gamma_lang .ne. 0) then
@@ -111,6 +112,7 @@ DEALLOCATE(tau)
 DEALLOCATE(Mp,Ma,Mass)
 DEALLOCATE(gamma_lang)
 DEALLOCATE(force_constraint)
+DEALLOCATE(pos_tot)
 CLOSE(15)
 CLOSE(16)
 CLOSE(17)

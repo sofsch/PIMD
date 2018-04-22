@@ -1,5 +1,5 @@
 MODULE Estimator
-USE Constants, ONLY : DP
+USE Constants, ONLY : DP, hbar
 CONTAINS
 
 SUBROUTINE KineticP()
@@ -12,10 +12,10 @@ KineticEnergy=0._DP
 DO i=1,nat
 	DO j=1,nbeads-1
 		do k=1,3
-			KineticEnergy = KineticEnergy - ( (Mass(i)*nbeads)/( 2._DP*(beta**2) ))*((tau(i,j+1,k)-tau(i,j,k))**2) ! *(hbar**2)
+			KineticEnergy = KineticEnergy - ( (Mass(i)*nbeads)/( 2._DP*(beta**2)*(hbar**2) ))*((tau(i,j+1,k)-tau(i,j,k))**2)
 		ENDDO
 	ENDDO
-	KineticEnergy = KineticEnergy - ( (Mass(i)*nbeads)/( 2._DP*(beta**2) ))*((tau(i,1,k)-tau(i,nbeads,k))**2) !*(hbar**2)
+	KineticEnergy = KineticEnergy - ( (Mass(i)*nbeads)/( 2._DP*(beta**2)*(hbar**2) ))*((tau(i,1,k)-tau(i,nbeads,k))**2)
 	KineticEnergy = KineticEnergy + sum(Force_constraint(i,:))*nat*(nbeads/(2._DP*Beta))
 ENDDO
 
