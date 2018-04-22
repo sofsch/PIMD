@@ -2,12 +2,12 @@
 nat = 1,
 ntyp = 1,
 nbeads = 8,
-nstep = 10000000,
-dt = 0.1,
+nstep = 1000000,
+dt = 20.,
 output="1beads"
 /
 &dynamics
-ions_dynamics="Verlet",
+ions_dynamics="BAOAB",
 Temperature = 300.,
 init_gamma_lang = 0,
 /
