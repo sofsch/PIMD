@@ -1,10 +1,10 @@
 &simulation
 nat = 1,
 ntyp = 1,
-nbeads = 8,
-nstep = 1000000,
+nbeads = 128,
+nstep = 100000,
 dt = 20.,
-output="1beads"
+output="128beads"
 /
 &dynamics
 ions_dynamics="BAOAB",

@@ -9,7 +9,7 @@ USE Staging
 USE Global, ONLY : dt,nstep,nat,nbeads,KineticEnergy,pos_tot,tau
 
 IMPLICIT NONE
-
+REAL(DP)	:: KP, KC, KCV
 INTEGER		:: i,j,k,l
 
 l=0
@@ -34,8 +34,13 @@ DO i=1,nstep
 	IF (MODULO((100.*(1.*i/nstep)),1.)==0.) then
 		write(*,*) "test",100.*i/nstep
 	ENDIF
+	CALL KineticP()
+	KP=KineticEnergy
 	CALL KineticV()
-	WRITE(17,*) i*dt, KineticEnergy
+	KC=KineticEnergy
+	CALL KineticCV()
+	KCV=KineticEnergy
+	WRITE(17,*) i*dt, KP, KC, KCV
 ENDDO
 
 END SUBROUTINE BAOAB

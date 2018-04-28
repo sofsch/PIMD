@@ -23,15 +23,15 @@ SELECT CASE(ions_dynamics)
 		CALL VERLET()
 END SELECT
 
-CALL distribution2d(pos_tot(:,1,1),pos_tot(:,1,2),proba,0.05_DP,0.05_DP,-5._DP,5._DP,-5._DP,5._DP,.TRUE.)
+!CALL distribution2d(pos_tot(:,1,1),pos_tot(:,1,2),proba,0.05_DP,0.05_DP,-5._DP,5._DP,-5._DP,5._DP,.TRUE.)
 
 
-DO i=1,size(proba,1)-1
-	WRITE(15,*) proba(i,:)
-	if (proba(i+1,1) .NE. proba(i,1)) THEN
-		WRITE(15,*) ""
-	endif
-ENDDO
+!DO i=1,size(proba,1)-1
+!	WRITE(15,*) proba(i,:)
+!	if (proba(i+1,1) .NE. proba(i,1)) THEN
+!		WRITE(15,*) ""
+!	endif
+!ENDDO
 
  
 CALL FINALIZE()

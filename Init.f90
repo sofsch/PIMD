@@ -46,6 +46,7 @@ dt=dt*2._DP
 ALLOCATE(U(nat,nbeads,3))
 ALLOCATE(P(nat,nbeads,3))
 ALLOCATE(tau(nat,nbeads,3))
+ALLOCATE(tau_c(nat,3))
 ALLOCATE(Mass(nat))
 ALLOCATE(Mp(nat,nbeads),Ma(nat,nbeads))
 ALLOCATE(gamma_lang(nbeads))
@@ -108,7 +109,7 @@ IMPLICIT NONE
 
 DEALLOCATE(U)
 DEALLOCATE(P)
-DEALLOCATE(tau)
+DEALLOCATE(tau,tau_c)
 DEALLOCATE(Mp,Ma,Mass)
 DEALLOCATE(gamma_lang)
 DEALLOCATE(force_constraint)
